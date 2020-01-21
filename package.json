@@ -1,6 +1,6 @@
 {
   "name": "@nacelle/nacelle-react-hooks",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Custom hooks for fetching data from Nacelle&#x27;s Hail Frequency API",
   "author": "getnacelle",
   "license": "ISC",
