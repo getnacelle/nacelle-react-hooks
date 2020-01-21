@@ -15,7 +15,7 @@ interface CartItem {
 
 interface CheckoutInput {
   cartItems: CartItem[];
-  checkoutId: string;
+  checkoutId?: string;
   discountCodes?: string[];
   source?: string;
 }
@@ -94,7 +94,7 @@ export function useNacelle(
 export function useCheckout(
   credentials: Credentials,
   lineItems: VariantInput[],
-  checkoutId: string
+  checkoutId?: string
 ) {
   //
   // Fetch checkout data (url, id, etc.) from the Hail Frequency API
