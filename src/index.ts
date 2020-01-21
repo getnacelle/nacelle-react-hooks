@@ -20,6 +20,10 @@ interface CheckoutInput {
   source?: string;
 }
 
+interface AnyObject {
+  [name: string]: any;
+}
+
 interface VariableInput {
   [name: string]: CheckoutInput | AnyObject;
 }
@@ -29,10 +33,6 @@ interface VariantInput {
     id: string;
     qty: number;
   };
-}
-
-interface AnyObject {
-  [name: string]: any;
 }
 
 export async function getHailFrequencyData(
