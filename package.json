@@ -1,6 +1,6 @@
 {
   "name": "@nacelle/nacelle-react-hooks",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Custom hooks for fetching data from Nacelle&#x27;s Hail Frequency API",
   "author": "getnacelle",
   "license": "ISC",
@@ -21,11 +21,10 @@
     "predeploy": "cd example && npm install && npm run build",
     "deploy": "gh-pages -d example/build"
   },
-  "dependencies": {
-    "axios": "^0.19.1"
-  },
+  "dependencies": {},
   "peerDependencies": {
-    "react": "^16.12.0"
+    "react": "^16.12.0",
+    "axios": "^0.19.1"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
