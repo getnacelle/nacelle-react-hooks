@@ -148,5 +148,5 @@ export function useCheckout(
       throw new Error(error);
     }
   }, [cartItems, checkoutId, credentials, isSending]);
-  return [checkoutData, checkoutCallback];
+  return [checkoutData, checkoutCallback, isSending];
 }
