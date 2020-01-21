@@ -1,30 +1,69 @@
 # @nacelle/nacelle-react-hooks
 
-> Custom hooks for fetching data from Nacelle&#x27;s Hail Frequency API
+> Custom hooks for fetching data from Nacelle's Hail Frequency API
 
 [![NPM](https://img.shields.io/npm/v/@nacelle/nacelle-react-hooks.svg)](https://www.npmjs.com/package/@nacelle/nacelle-react-hooks) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 ## Install
 
+### With NPM
+
 ```bash
-npm install --save @nacelle/nacelle-react-hooks
+npm i @nacelle/nacelle-react-hooks
 ```
 
-## Usage
+### With Yarn
 
-```tsx
-import * as React from 'react'
+```bash
+yarn add @nacelle/nacelle-react-hooks
+```
 
-import { useMyHook } from '@nacelle/nacelle-react-hooks'
+### Example Usage
 
-const Example = () => {
-  const example = useMyHook()
+```JavaScript
+const Cart = () => {
+  const lineItems = [
+    item1: { variant: { id: 101, qty: 1 }},
+    item2: { variant: { id: 102, qty: 4 }}
+  ]
+  const credentials = {
+    nacelle_space_id: process.env.NACELLE_SPACE_ID,
+    nacelle_graphql_token: process.env.NACELLE_GRAPHQL_TOKEN
+  };
+  const [checkoutData, getCheckoutData, isLoading] = useCheckout(
+    credentials,
+    lineItems
+  );
+  useEffect(() => {
+    if (checkoutData) {
+      const payload = checkoutData.data.data.processCheckout;
+      window.location = payload.url;
+    }
+  }, [checkoutData, dispatch]);
   return (
-    <div>
-      {example}
-    </div>
-  )
-}
+    <>
+      <h2>Cart</h2>
+      <button
+        type="button"
+        onClick={() => getCheckoutData()}
+        disabled={isLoading}
+      >
+        {isLoading ? <>Loading...</> : <>Checkout</>}
+      </button>
+      <ul>
+          {lineItems.map(el => (
+            <li key={el.variant.id}>
+              <h3>{item.title}</h3>
+              <img src={item.src} alt={item.title} />
+              <p>{item.variant.title}</p>
+              <p>Quantity: {item.variant.qty}</p>
+              <p>$ {(Number(item.variant.price) * item.variant.qty).toFixed(2)}</p>
+            </li>
+          ))}
+      </ul>
+    </>
+  );
+};
 ```
 
 ## License
