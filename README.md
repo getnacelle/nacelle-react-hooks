@@ -5,6 +5,7 @@
 [![npm version](https://img.shields.io/npm/v/@nacelle/nacelle-react-hooks.svg)](https://www.npmjs.com/package/@nacelle/nacelle-react-hooks)
 [![GitHub issues](https://img.shields.io/github/issues/getnacelle/gatsby-theme-nacelle)](https://github.com/getnacelle/gatsby-theme-nacelle/issues)
 [![GitHub license](https://img.shields.io/github/license/getnacelle/gatsby-theme-nacelle)](https://github.com/getnacelle/gatsby-theme-nacelle/blob/master/LICENSE)
+[![install size](https://badgen.net/bundlephobia/minzip/@nacelle/nacelle-react-hooks)](https://badgen.net/bundlephobia/minzip/@nacelle/nacelle-react-hooks)
 
 ## Install
 
