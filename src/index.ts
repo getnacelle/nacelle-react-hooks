@@ -1,34 +1,34 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import axios, { AxiosResponse } from "axios";
 
-interface Credentials {
+interface ICredentials {
   nacelle_space_id: string;
   nacelle_graphql_token: string;
 }
 
-interface CartItem {
+interface ICartItem {
   cartItemId: string;
   variantId: string;
   quantity: number;
   metafields?: any[];
 }
 
-interface CheckoutInput {
-  cartItems: CartItem[];
+interface ICheckoutInput {
+  cartItems: ICartItem[];
   checkoutId?: string;
   discountCodes?: string[];
   source?: string;
 }
 
-interface AnyObject {
+interface IAnyObject {
   [name: string]: any;
 }
 
-interface VariableInput {
-  [name: string]: CheckoutInput | AnyObject;
+interface IVariableInput {
+  [name: string]: ICheckoutInput | IAnyObject;
 }
 
-interface VariantInput {
+interface IVariant {
   [name: string]: {
     id: string;
     qty: number;
@@ -36,9 +36,9 @@ interface VariantInput {
 }
 
 export async function getHailFrequencyData(
-  credentials: Credentials,
+  credentials: ICredentials,
   query: string,
-  variables: VariableInput
+  variables: IVariableInput
 ) {
   //
   // Fetch data from Nacelle's Hail Frequency API with Axios
@@ -50,7 +50,7 @@ export async function getHailFrequencyData(
       method: "post",
       headers: {
         "Content-Type": "application/json",
-        "X-Nacelle-Space-ID": nacelle_space_id,
+        "X-Nacelle-Space-Id": nacelle_space_id,
         "X-Nacelle-Space-Token": nacelle_graphql_token
       },
       data: {
@@ -64,14 +64,17 @@ export async function getHailFrequencyData(
   }
 }
 
+/**
+ * Fetch data from the Hail Frequency API with any valid query
+ * @param credentials
+ * @param query
+ * @param variables
+ */
 export function useNacelle(
-  credentials: Credentials,
+  credentials: ICredentials,
   query: string,
-  variables: VariableInput
+  variables: IVariableInput
 ) {
-  //
-  // Fetch data from the Hail Frequency API with any valid query.
-  //
   const [data, setData] = useState(null);
   useEffect(() => {
     async function fetchData() {
@@ -91,14 +94,17 @@ export function useNacelle(
   return data;
 }
 
+/**
+ * Fetch checkout data (url, id, etc.) from the Hail Frequency API
+ * @param credentials
+ * @param lineItems
+ * @param checkoutId
+ */
 export function useCheckout(
-  credentials: Credentials,
-  lineItems: VariantInput[],
+  credentials: ICredentials,
+  lineItems: IVariant[],
   checkoutId?: string
 ) {
-  //
-  // Fetch checkout data (url, id, etc.) from the Hail Frequency API
-  //
   const [checkoutData, setCheckoutData] = useState<AxiosResponse | null>(null);
   const [isSending, setIsSending] = useState(false);
   const isMounted = useRef(true);
@@ -118,7 +124,7 @@ export function useCheckout(
     if (isSending) return; // while sending, don't send again
     setIsSending(true);
     const query = `
-      mutation sendCheckout($input: CheckoutInput) {
+      mutation sendCheckout($input: ICheckoutInput) {
         processCheckout(input: $input) {
           id
           completed
