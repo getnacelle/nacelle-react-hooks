@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import axios, { AxiosResponse } from "axios";
 
+/**
+ * @param nacelle_space_id: the target Nacelle Space ID (string)
+ * @param nacelle_graphql_token: the GraphQL token associated with the Nacelle Space (string)
+ */
 interface ICredentials {
   nacelle_space_id: string;
   nacelle_graphql_token: string;
