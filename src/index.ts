@@ -35,6 +35,13 @@ interface IVariant {
   };
 }
 
+/**
+ * Fetch data from Nacelle's Hail Frequency API (GraphQL)
+ * @param credentials an object containing your nacelle_space_id and your nacelle_graphql_token
+ * @param query a GraphQL query string (see the schema & docs at https://hailfrequency.com/v2/graphql)
+ * @param variables an object containing any query variables
+ * @returns The payload from the Hail Frequency GraphQL server
+ */
 export async function getHailFrequencyData(
   credentials: ICredentials,
   query: string,
@@ -66,9 +73,10 @@ export async function getHailFrequencyData(
 
 /**
  * Fetch data from the Hail Frequency API with any valid query
- * @param credentials
- * @param query
- * @param variables
+ * @param credentials an object containing your nacelle_space_id and your nacelle_graphql_token
+ * @param query a GraphQL query string (see the schema & docs at https://hailfrequency.com/v2/graphql)
+ * @param variables an object containing any query variables
+ * @returns The payload from the Hail Frequency GraphQL server
  */
 export function useNacelle(
   credentials: ICredentials,
@@ -96,9 +104,10 @@ export function useNacelle(
 
 /**
  * Fetch checkout data (url, id, etc.) from the Hail Frequency API
- * @param credentials
- * @param lineItems
- * @param checkoutId
+ * @param credentials an object containing your nacelle_space_id and your nacelle_graphql_token
+ * @param lineItems an array of 'variant' objects containing an 'id' and a 'qty'
+ * @param checkoutId an id string of a previously checkout to be continued
+ * @returns an array with checkout data [0], a checkout callback fn [1], and an isSending boolean [2]
  */
 export function useCheckout(
   credentials: ICredentials,
