@@ -5,34 +5,34 @@ import axios, { AxiosResponse } from "axios";
  * @param nacelle_space_id: the target Nacelle Space ID (string)
  * @param nacelle_graphql_token: the GraphQL token associated with the Nacelle Space (string)
  */
-interface ICredentials {
+interface Credentials {
   nacelle_space_id: string;
   nacelle_graphql_token: string;
 }
 
-interface ICartItem {
+interface CartItem {
   cartItemId: string;
   variantId: string;
   quantity: number;
   metafields?: any[];
 }
 
-interface ICheckoutInput {
-  cartItems: ICartItem[];
+interface CheckoutInput {
+  cartItems: CartItem[];
   checkoutId?: string;
   discountCodes?: string[];
   source?: string;
 }
 
-interface IAnyObject {
+interface AnyObject {
   [name: string]: any;
 }
 
-interface IVariableInput {
-  [name: string]: ICheckoutInput | IAnyObject;
+interface VariableInput {
+  [name: string]: CheckoutInput | AnyObject;
 }
 
-interface IVariant {
+interface Variant {
   [name: string]: {
     id: string;
     qty: number;
@@ -47,9 +47,9 @@ interface IVariant {
  * @returns The payload from the Hail Frequency GraphQL server
  */
 export async function getHailFrequencyData(
-  credentials: ICredentials,
+  credentials: Credentials,
   query: string,
-  variables: IVariableInput
+  variables: VariableInput
 ) {
   //
   // Fetch data from Nacelle's Hail Frequency API with Axios
@@ -62,12 +62,12 @@ export async function getHailFrequencyData(
       headers: {
         "Content-Type": "application/json",
         "X-Nacelle-Space-Id": nacelle_space_id,
-        "X-Nacelle-Space-Token": nacelle_graphql_token
+        "X-Nacelle-Space-Token": nacelle_graphql_token,
       },
       data: {
         query,
-        variables
-      }
+        variables,
+      },
     });
     return result;
   } catch (error) {
@@ -83,9 +83,9 @@ export async function getHailFrequencyData(
  * @returns The payload from the Hail Frequency GraphQL server
  */
 export function useNacelle(
-  credentials: ICredentials,
+  credentials: Credentials,
   query: string,
-  variables: IVariableInput
+  variables: VariableInput
 ) {
   const [data, setData] = useState(null);
   useEffect(() => {
@@ -114,8 +114,8 @@ export function useNacelle(
  * @returns an array with checkout data [0], a checkout callback fn [1], and an isSending boolean [2]
  */
 export function useCheckout(
-  credentials: ICredentials,
-  lineItems: IVariant[],
+  credentials: Credentials,
+  lineItems: Variant[],
   checkoutId?: string
 ) {
   const [checkoutData, setCheckoutData] = useState<AxiosResponse | null>(null);
@@ -131,13 +131,13 @@ export function useCheckout(
   const cartItems = lineItems.map((item, idx) => ({
     variantId: item.variant.id,
     cartItemId: `${idx}::${item.variant.id}`,
-    quantity: item.variant.qty
+    quantity: item.variant.qty,
   }));
   const checkoutCallback = useCallback(async () => {
     if (isSending) return; // while sending, don't send again
     setIsSending(true);
     const query = `
-      mutation sendCheckout($input: ICheckoutInput) {
+      mutation sendCheckout($input: CheckoutInput) {
         processCheckout(input: $input) {
           id
           completed
@@ -149,8 +149,8 @@ export function useCheckout(
     const variables = {
       input: {
         cartItems,
-        checkoutId
-      }
+        checkoutId,
+      },
     };
     try {
       const checkoutResult = await getHailFrequencyData(
