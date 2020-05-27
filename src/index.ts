@@ -24,18 +24,15 @@ interface CheckoutInput {
   source?: string;
 }
 
-interface AnyObject {
-  [name: string]: any;
-}
-
 interface VariableInput {
-  [name: string]: CheckoutInput | AnyObject;
+  [name: string]: CheckoutInput | object;
 }
 
 interface Variant {
   [name: string]: {
     id: string;
     qty: number;
+    metafields?: [object];
   };
 }
 
@@ -132,6 +129,7 @@ export function useCheckout(
     variantId: item.variant.id,
     cartItemId: `${idx}::${item.variant.id}`,
     quantity: item.variant.qty,
+    metafields: item.variant.metafields,
   }));
   const checkoutCallback = useCallback(async () => {
     if (isSending) return; // while sending, don't send again
