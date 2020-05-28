@@ -129,7 +129,7 @@ export function useCheckout(
     variantId: item.variant.id,
     cartItemId: `${idx}::${item.variant.id}`,
     quantity: item.variant.qty,
-    metafields: item.variant.metafields,
+    metafields: item.metafields,
   }));
   const checkoutCallback = useCallback(async () => {
     if (isSending) return; // while sending, don't send again
