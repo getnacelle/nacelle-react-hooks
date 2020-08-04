@@ -1,39 +1,39 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import axios, { AxiosResponse } from "axios";
+import { useState, useEffect, useCallback, useRef } from 'react'
+import axios from 'axios'
 
 /**
  * @param nacelle_space_id: the target Nacelle Space ID (string)
  * @param nacelle_graphql_token: the GraphQL token associated with the Nacelle Space (string)
  */
 interface Credentials {
-  nacelle_space_id: string;
-  nacelle_graphql_token: string;
+  nacelle_space_id: string
+  nacelle_graphql_token: string
 }
 
 interface CartItem {
-  cartItemId: string;
-  variantId: string;
-  quantity: number;
-  metafields?: any[];
+  cartItemId: string
+  variantId: string
+  quantity: number
+  metafields?: any[]
 }
 
 interface CheckoutInput {
-  cartItems: CartItem[];
-  checkoutId?: string;
-  discountCodes?: string[];
-  source?: string;
+  cartItems: CartItem[]
+  checkoutId?: string
+  discountCodes?: string[]
+  source?: string
 }
 
 interface VariableInput {
-  [name: string]: CheckoutInput | object;
+  [name: string]: CheckoutInput | object
 }
 
 interface Variant {
   [name: string]: {
-    id: string;
-    qty: number;
-    metafields?: [object];
-  };
+    id: string
+    qty: number
+    metafields?: [object]
+  }
 }
 
 /**
@@ -51,24 +51,22 @@ export async function getHailFrequencyData(
   //
   // Fetch data from Nacelle's Hail Frequency API with Axios
   //
-  const { nacelle_space_id, nacelle_graphql_token } = credentials;
+  const { nacelle_space_id, nacelle_graphql_token } = credentials
   try {
-    const result = await axios({
-      url: "https://hailfrequency.com/v2/graphql",
-      method: "post",
+    const result = await axios.post('https://hailfrequency.com/v2/graphql', {
       headers: {
-        "Content-Type": "application/json",
-        "X-Nacelle-Space-Id": nacelle_space_id,
-        "X-Nacelle-Space-Token": nacelle_graphql_token,
+        'Content-Type': 'application/json',
+        'X-Nacelle-Space-Id': nacelle_space_id,
+        'X-Nacelle-Space-Token': nacelle_graphql_token
       },
       data: {
         query,
-        variables,
-      },
-    });
-    return result;
+        variables
+      }
+    })
+    return result
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error)
   }
 }
 
@@ -84,23 +82,19 @@ export function useNacelle(
   query: string,
   variables: VariableInput
 ) {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState(null)
   useEffect(() => {
     async function fetchData() {
       try {
-        const result = await getHailFrequencyData(
-          credentials,
-          query,
-          variables
-        );
-        setData(result.data);
+        const result = await getHailFrequencyData(credentials, query, variables)
+        setData(result.data)
       } catch (error) {
-        throw new Error(error);
+        throw new Error(error)
       }
     }
-    fetchData();
-  }, []);
-  return data;
+    fetchData()
+  }, []) // eslint-disable-line
+  return data
 }
 
 /**
@@ -115,25 +109,27 @@ export function useCheckout(
   lineItems: Variant[],
   checkoutId?: string
 ) {
-  const [checkoutData, setCheckoutData] = useState<AxiosResponse | null>(null);
-  const [isSending, setIsSending] = useState(false);
-  const isMounted = useRef(true);
+  const [checkoutData, setCheckoutData] = useState<
+    import('axios').AxiosResponse | null
+  >(null)
+  const [isSending, setIsSending] = useState(false)
+  const isMounted = useRef(true)
   useEffect(
     // Set isMounted to false when the component is unmounted
     () => () => {
-      isMounted.current = false;
+      isMounted.current = false
     },
     []
-  );
+  )
   const cartItems = lineItems.map((item, idx) => ({
     variantId: item.variant.id,
     cartItemId: `${idx}::${item.variant.id}`,
     quantity: item.variant.qty,
-    metafields: item.metafields,
-  }));
+    metafields: item.metafields
+  }))
   const checkoutCallback = useCallback(async () => {
-    if (isSending) return; // while sending, don't send again
-    setIsSending(true);
+    if (isSending) return // while sending, don't send again
+    setIsSending(true)
     const query = `
       mutation sendCheckout($input: CheckoutInput) {
         processCheckout(input: $input) {
@@ -143,27 +139,27 @@ export function useCheckout(
           source
         }
       }
-    `;
+    `
     const variables = {
       input: {
         cartItems,
-        checkoutId,
-      },
-    };
+        checkoutId
+      }
+    }
     try {
       const checkoutResult = await getHailFrequencyData(
         credentials,
         query,
         variables
-      );
-      setCheckoutData(checkoutResult);
+      )
+      setCheckoutData(checkoutResult)
       if (isMounted.current) {
-        setIsSending(false); // only update if still mounted
+        setIsSending(false) // only update if still mounted
       }
-      return checkoutResult;
+      return checkoutResult
     } catch (error) {
-      throw new Error(error);
+      throw new Error(error)
     }
-  }, [cartItems, checkoutId, credentials, isSending]);
-  return [checkoutData, checkoutCallback, isSending];
+  }, [cartItems, checkoutId, credentials, isSending])
+  return [checkoutData, checkoutCallback, isSending]
 }
