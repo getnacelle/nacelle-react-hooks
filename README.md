@@ -7,6 +7,10 @@
 [![GitHub license](https://img.shields.io/github/license/getnacelle/gatsby-theme-nacelle)](https://github.com/getnacelle/gatsby-theme-nacelle/blob/master/LICENSE)
 [![install size](https://badgen.net/bundlephobia/minzip/@nacelle/nacelle-react-hooks)](https://badgen.net/bundlephobia/minzip/@nacelle/nacelle-react-hooks)
 
+## NOTICE
+
+This package is deprecated. For up-to-date information and examples related to building frontend projects powered by Nacelle, please see [`docs.nacelle.com`](https://docs.nacelle.com/docs/heads).
+
 ## Install
 
 ### With NPM
